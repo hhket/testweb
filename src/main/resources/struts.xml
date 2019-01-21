@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.objectFactory" value="spring"></constant>
+	<constant name="struts.i18n.encoding" value="UTF-8"></constant>
+	<constant name="struts.multipart.maxSize" value="104857600"></constant>
+
+	<package name="crm" namespace="/" extends="struts-default">
+
+	<!-- 	<interceptors>
+			<interceptor name="loginInterceptor"
+				class="com.hhket.interceptors.LoginInterceptor"></interceptor>
+			注册拦截器栈
+			<interceptor-stack name="loginStack">
+				<interceptor-ref name="loginInterceptor">
+					<param name="excludeMethods">login</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		指定包中的默认拦截器栈
+		<default-interceptor-ref
+			name="loginInterceptor"></default-interceptor-ref>
+ -->
+
+
+		<action name="UploadAction_*" class="uploadAction" method="{1}">
+			<result name="success">/success.jsp</result>
+		</action>
+		<action name="DownloadAction_*" class="downloadAction" method="{1}">
+			<result type="stream">
+				<param name="inputName">is</param>
+				<param name="contentDisposition">attachment;filename=${fileName}</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>
+		<action name="PublicAction_*" class="publicAction" method="{1}">
+		</action>
+	</package>
+
+</struts>

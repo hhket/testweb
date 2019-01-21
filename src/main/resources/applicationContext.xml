@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:tx="http://www.springframework.org/schema/tx" 
+		xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:context="http://www.springframework.org/schema/context" 
+		xmlns:aop="http://www.springframework.org/schema/aop" 
+		xsi:schemaLocation="http://www.springframework.org/schema/tx 
+							http://www.springframework.org/schema/tx/spring-tx.xsd 
+							http://www.springframework.org/schema/beans 
+							http://www.springframework.org/schema/beans/spring-beans.xsd 
+							http://www.springframework.org/schema/context 
+							http://www.springframework.org/schema/context/spring-context.xsd 
+							http://www.springframework.org/schema/aop 
+							http://www.springframework.org/schema/aop/spring-aop.xsd ">
+
+	   <context:component-scan base-package="com.web.*"/>
+	<context:property-placeholder location="classpath:db.properties"/>
+	
+	<bean name="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+		<property name="user" value="${jdbc.user}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+	</bean>
+
+	<bean name="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+<tx:annotation-driven transaction-manager="transactionManager"/>
+
+		
+	<bean name="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		<property name="mappingDirectoryLocations" value="classpath:com/web/domain"></property>
+	</bean>	
+		
+	<bean name="uploadAction" class="com.web.actions.UploadAction" scope="prototype" >
+		<property name="uploadService" ref="uploadService"></property>
+	</bean>
+	
+	<bean name="uploadService" class="com.web.service.impl.UploadServiceImpl">
+		<property name="ud" ref="uploadDao"></property>
+	</bean>
+	
+	<bean name="uploadDao" class="com.web.dao.impl.UploadDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean name="downloadAction" class="com.web.actions.DownloadAction" scope="prototype">
+		<property name="downloadService" ref="downloadService"></property>
+	</bean>
+	
+	<bean name="downloadService" class="com.web.service.impl.DownloadServiceImpl">
+		<property name="dd" ref="downloadDao"></property>
+	</bean>
+	
+	<bean name="downloadDao" class="com.web.dao.impl.DownloadDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+		<bean name="publicAction" class="com.web.actions.PublicAction" scope="prototype" >
+		<property name="publicService" ref="publicService"></property>
+	</bean>
+	
+	<bean name="publicService" class="com.web.service.impl.PublicServiceImpl">
+		<property name="pd" ref="publicDao"></property>
+	</bean>
+	
+	<bean name="publicDao" class="com.web.dao.impl.PublicDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+
+	</beans>
