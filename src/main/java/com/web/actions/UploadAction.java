@@ -58,6 +58,7 @@ public class UploadAction extends ActionSupport implements ModelDriven<Upload> {
 			uploads.setFileContent(text);
 			uploads.setFile_name(uploadFileName[i]);
 			uploadService.savefile(uploads);
+			System.out.println("+++++++++++++");
 		}
 		ServletActionContext.getResponse().getWriter().print(json);
 		return;
